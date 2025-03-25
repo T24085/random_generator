@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: auto;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .input-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        label {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        input {
+            font-size: 20px;
+            padding: 5px;
+            width: 150px;
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            font-size: 72px; /* Large font for HD TV visibility */
+            margin: 20px 0;
+            text-align: center;
+        }
+        #usedNumbers {
+            font-size: 16px;
+            margin-top: 20px;
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random Number Generator</h1>
+    <div class="input-container">
+        <label for="minNum">Minimum Number:</label>
+        <input type="number" id="minNum" value="1">
+        <br>
+        <label for="maxNum">Maximum Number:</label>
+        <input type="number" id="maxNum" value="100">
+    </div>
+    <button onclick="generateNumber()">Generate</button>
+    <button onclick="resetNumbers()">Reset</button>
+    <div id="result">Result: </div>
+    <div id="usedNumbers">Used Numbers: None</div>
+
+    <script>
+        let usedNumbers = [];
+
+        function generateNumber() {
+            const minNum = parseInt(document.getElementById('minNum').value);
+            const maxNum = parseInt(document.getElementById('maxNum').value);
+
+            if (isNaN(minNum) || isNaN(maxNum)) {
+                alert("Please enter valid numbers");
+                return;
+            }
+
+            if (minNum >= maxNum) {
+                alert("Minimum must be less than Maximum");
+                return;
+            }
+
+            const range = maxNum - minNum + 1;
+            if (usedNumbers.length >= range) {
+                alert("All possible numbers have been used! Please reset or change range.");
+                return;
+            }
+
+            let randomNum;
+            do {
+                randomNum = Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum;
+            } while (usedNumbers.includes(randomNum));
+
+            usedNumbers.push(randomNum);
+            document.getElementById('result').textContent = `Result: ${randomNum}`;
+            document.getElementById('usedNumbers').textContent =
+                `Used Numbers: ${usedNumbers.join(', ')}`;
+
+            // Enter full-screen mode if not already
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable full-screen mode: ${err.message}`);
+                });
+            }
+        }
+
+        function resetNumbers() {
+            usedNumbers = [];
+            document.getElementById('result').textContent = "Result: ";
+            document.getElementById('usedNumbers').textContent = "Used Numbers: None";
+            alert("Number history has been reset");
+        }
+
+        // Exit full-screen with Escape key (handled by browser, no extra code needed)
+    </script>
+</body>
+</html>
